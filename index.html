@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title> AppelBoom v7.0 - Designed by ME</title>
+<style>
+  /* ---------- تصميم عام وحل مشاكل التنسيق للصور ---------- */
+  :root{
+    --slot-font: 30px;
+    --slot-gap: 12px;
+  }
+  *{box-sizing:border-box;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;}
+  html,body{height:100%;margin:0;padding:0;background:#222}
+  .wrap{width:100%;height:100vh;display:flex;align-items:center;justify-content:center;padding:12px}
+  .stage{
+    width:100%;max-width:1320px;height:calc(100vh - 24px);position:relative;border-radius:8px;overflow:hidden;
+    background-color:#000;
+  }
+
+  /* الخلفية: نغطي كامل الشاشة ونستخدم object-fit:cover لضبط الصورة تلقائياً */
+  .bg{
+    position:absolute;inset:0;z-index:0;background-size:cover;background-position:center center;filter:none;
+  }
+
+  header{position:relative;z-index:8;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent)}
+  header .title{font-weight:800;color:#fff}
+  header .controls{display:flex;gap:8px;align-items:center}
+
+  /* ======= الصفحة: تصميم Grid مرن للصفحتين ======= */
+  .page{display:none;height:calc(100% - 64px);position:relative;z-index:5;padding:12px}
+  .page.active{display:block}
+
+  /* --- SETUP page --- */
+  .setup{height:100%;display:grid;grid-template-columns:88px 1fr;gap:12px;align-items:center}
+  .lang-col{display:flex;flex-direction:column;gap:10px}
+  .lang-btn{width:72px;height:38px;border-radius:8px;background:rgba(255,255,255,0.92);display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:800}
+  .lang-btn.active{background:#0b5138;color:white}
+  /* tree container: ثابت الأبعاد النسبي (تُحافظ على aspect ratio) */
+  .tree-wrap{
+    position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  }
+  .tree-frame{
+    /* نستخدم نسبة ثابتة للحفاظ على تناسق وضع التفاحات والادخال */
+    width:86%;max-width:760px;aspect-ratio: 4/3;position:relative;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .tree-img{position:absolute;left:43%;top:50%;transform:translate(-50%,-50%);width:100%;height:135%;object-fit:cover;border-radius:8px} //تحريك الشجرة الأولى
+  /* طبقة التفاحات داخل الشجرة (نستخدم نسبة داخل إطار الشجرة) */
+  .hero-apples, .tree-apples{position:absolute;left:7%;top:8%;width:86%;height:84%;pointer-events:none}
+  .apple-item{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center}
+  .apple-item img{display:block;max-width:100%;height:auto;pointer-events:none}
+
+  /* 🆕 مربع الإدخال الجديد في اليمين */
+  .input-container {
+    position: absolute;
+    right: 20px;
+    top: 120px;
+    width: 220px;
+    z-index: 10;
+  }
+  .input-field {
+    width: 100%;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: white;
+    color: #000;
+    font-weight: 800;
+    text-align: center;
+    font-size: 18px;
+    outline: none;
+    letter-spacing: 4px;
+  }
+  /* 🆕 إخفاء النص وعرض النقاط الكبيرة */
+  .input-field.password-dots {
+    font-size: 24px;
+    letter-spacing: 8px;
+    -webkit-text-security: disc;
+    text-security: disc;
+  }
+  .input-field::placeholder {
+    color: #666;
+    letter-spacing: normal;
+    font-size: 16px;
+  }
+
+  .start-col{position:absolute;right:20px;bottom:120px;display:flex;align-items:center;justify-content:center}
+  .start-btn{padding:20px 28px;border-radius:12px;background:#0b5138;color:white;border:none;font-weight:900;font-size:22px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+
+  /* --- GAME page --- */
+  .game{height:100%;display:grid;grid-template-columns:1fr 460px;gap:12px;align-items:start}
+  .left-game{position:relative;display:flex;align-items:center;justify-content:center}
+  .game-tree-frame{width:92%;max-width:740px;aspect-ratio: 4/3;position:relative}
+  .game-tree-img{position:absolute;left:30%;top:70%;transform:translate(-50%,-50%);width:100%;height:150%;object-fit:cover;border-radius:8px} // تحريك الشجرة الثانية
+  .tree-apples{position:absolute;left:7%;top:8%;width:86%;height:84%;pointer-events:none}
+
+  .right-col{display:flex;flex-direction:column;gap:10px;padding:6px;height:100%}
+  .slots-row{display:flex;justify-content:center;gap:var(--slot-gap,12px);align-items:center;min-height:100px}
+slotsRow.style.justifyContent = "flex-start"; // 🔸 يحرك الكلمة إلى اليسار
+slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حافة الشاشة (اختياري)
+
+  .slot{min-width:36px;border-bottom:3px solid rgba(255,255,255,0.12);padding:6px 8px;text-align:center;font-weight:900;font-size:var(--slot-font,30px);color:#fff}
+  .slot.space{border-bottom:none}
+  .alphabet{display:flex;flex-wrap:wrap;gap:8px;padding:8px;border-radius:8px;min-height:160px;align-items:flex-start;overflow:auto;justify-content:center}
+  .letter-btn{padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:rgba(255,255,255,0.94);cursor:pointer;min-width:40px;text-align:center;font-weight:800}
+  .letter-btn.disabled{opacity:0.28;cursor:default}
+
+  .fallen-columns{display:flex;gap:12px;overflow:auto;padding-top:100px;align-items:flex-start}
+  .fallen-column{display:flex;flex-direction:column;gap:10px;align-items:center;width:84px}
+  .fallen-item{display:flex;flex-direction:row;align-items:center;gap:8px}
+  .fallen-letter{font-weight:900;font-size:18px;color:#111;margin-left:4px}
+
+  .new-bottom{position:absolute;right:12px;bottom:12px;z-index:8}
+  .new-btn{padding:10px 12px;border-radius:8px;background:#222;color:white;border:none;cursor:pointer;font-weight:800}
+
+  /* modal */
+  .modal{position:fixed;left:0;top:0;right:0;bottom:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:9999}
+  .modal.show{display:flex}
+  .modal-card{background:white;padding:18px;border-radius:12px;min-width:320px;text-align:center}
+  .modal-card img{max-width:320px;height:auto;border-radius:8px;margin:8px 0}
+  .modal-btn{margin-top:12px;padding:8px 12px;border-radius:8px;border:none;background:#0b5138;color:white;cursor:pointer}
+  .sound-toggle{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.06);cursor:pointer}
+
+  .signature{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,0.92);padding:8px;border-radius:8px;font-size:13px;z-index:8}
+
+  @media (max-width:1100px){ .setup{grid-template-columns:64px 1fr} .game{grid-template-columns:1fr} .tree-frame{width:92%} .game-tree-frame{width:98%} .input-container{right:10px;top:100px;width:180px} .start-col{right:10px;bottom:100px} }
+
+  /* 🆕 تحسينات الجوال البسيطة */
+  @media (max-width: 768px) {
+    .wrap {
+      padding: 5px;
+    }
+    
+    .stage {
+      height: calc(100vh - 10px);
+    }
+    
+    header .title {
+      font-size: 16px;
+    }
+    
+    .setup {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+    }
+    
+    .lang-col {
+      flex-direction: row;
+      justify-content: center;
+      order: 2;
+    }
+    
+    .lang-btn {
+      width: 70px;
+      height: 35px;
+      font-size: 14px;
+    }
+    
+    .tree-frame {
+      order: 1;
+    }
+    
+    .input-container {
+      position: relative;
+      width: 90%;
+      margin: 15px auto;
+      order: 3;
+      right: auto;
+      top: auto;
+    }
+    
+    .start-col {
+      position: relative;
+      width: 100%;
+      order: 4;
+      right: auto;
+      bottom: auto;
+      margin-top: 15px;
+    }
+    
+    .start-btn {
+      width: 200px;
+      padding: 16px 24px;
+      font-size: 18px;
+    }
+    
+    .game {
+      grid-template-columns: 1fr;
+    }
+    
+    .right-col {
+      height: auto;
+      max-height: 40vh;
+    }
+    
+    .slots-row {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .slot {
+      min-width: 30px;
+      font-size: 24px;
+    }
+    
+    .letter-btn {
+      padding: 12px 14px;
+      min-width: 42px;
+      font-size: 16px;
+    }
+    
+    .new-bottom {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+</style>
+</head>
+<body>
+  <script src="config.js"></script>
+
+  <div class="wrap">
+    <div class="stage" id="stage">
+      <div id="bg" class="bg"></div>
+
+      <header>
+        <div class="title">Appelboom V7.0 - Designed by ME </div>
+        <div class="controls">
+          <button id="soundToggle" class="sound-toggle">Sound: on</button>
+        </div>
+      </header>
+
+      <!-- PAGE SETUP -->
+      <section id="pageSetup" class="page active">
+        <div class="setup">
+          <div class="lang-col" id="langCol">
+            <div class="lang-btn active" data-lang="nl">NL</div>
+            <div class="lang-btn" data-lang="en">EN</div>
+            <div class="lang-btn" data-lang="ar">AR</div>
+          </div>
+
+          <div class="tree-wrap">
+            <div class="tree-frame">
+              <img id="heroTree" class="tree-img" src="" alt="tree" />
+              <div id="heroApples" class="hero-apples"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🆕 مربع الإدخال الجديد في الموقع المطلوب -->
+        <div class="input-container">
+          <input id="wordInput" class="input-field password-dots" autocomplete="off" 
+                 placeholder="Typ het woord..." />
+        </div>
+
+        <div class="start-col">
+          <button id="startBtn" class="start-btn">Start</button>
+        </div>
+      </section>
+
+      <!-- PAGE GAME -->
+      <section id="pageGame" class="page" aria-hidden="true">
+        <div class="game">
+          <div class="left-game">
+            <div class="game-tree-frame">
+              <img id="gameTree" class="game-tree-img" src="" alt="tree" />
+              <div id="treeApples" class="tree-apples"></div>
+            </div>
+          </div>
+
+          <div class="right-col">
+            <div id="slotsRow" class="slots-row"></div>
+            <div id="alphabet" class="alphabet"></div>
+            <div id="fallenColumns" class="fallen-columns"></div>
+          </div>
+
+          <div class="new-bottom">
+            <button id="newBtn" class="new-btn">Nieuw / New</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="modal" id="modal"><div class="modal-card">
+        <h2 id="modalTitle"></h2>
+        <div id="modalMedia"></div>
+        <p id="modalDesc"></p>
+        <button id="modalOk" class="modal-btn">OK</button>
+      </div></div>
+
+      <div class="signature" id="signature">
+        <small id="signatureText"></small>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ================= Appelboom v7
+   - يعتمد على config.js (تأكد أنه محمّل)
+   - تحقق أونلاين للمفردات: dictionaryapi.dev للـ en و nl
+   - للعربية: ملف محلي assets/words_ar.json يُحمّل ويُبحث داخله
+*/
+
+(async function(){
+  if(typeof settings === 'undefined'){
+    alert('الملف config.js غير موجود. الرجاء وضعه في نفس المجلد.');
+    return;
+  }
+  // 🆕 كشف الجوال وإضافة touch events
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  // تحسين أزرار الحروف للجوال
+  function optimizeForMobile() {
+    if (isMobile) {
+      // جعل أزرار الحروف أكبر لللمس
+      document.querySelectorAll('.letter-btn').forEach(btn => {
+        btn.style.minWidth = '44px';
+        btn.style.minHeight = '44px';
+        btn.style.padding = '12px';
+      });
+      
+      // تحسين أزرار التحكم
+      document.querySelectorAll('button').forEach(btn => {
+        btn.style.minHeight = '44px';
+      });
+    }
+  }
+
+  // عناصر DOM
+  const bg = document.getElementById('bg');
+  const heroTree = document.getElementById('heroTree');
+  const gameTree = document.getElementById('gameTree');
+  const heroApples = document.getElementById('heroApples');
+  const treeApples = document.getElementById('treeApples');
+  const wordInput = document.getElementById('wordInput');
+  const startBtn = document.getElementById('startBtn');
+  const langCol = document.getElementById('langCol');
+  const langEls = langCol.querySelectorAll('.lang-btn');
+  const soundToggle = document.getElementById('soundToggle');
+  const pageSetup = document.getElementById('pageSetup');
+  const pageGame = document.getElementById('pageGame');
+  const slotsRow = document.getElementById('slotsRow');
+  const alphabetDiv = document.getElementById('alphabet');
+  const fallenColumns = document.getElementById('fallenColumns');
+  const newBtn = document.getElementById('newBtn');
+  const modal = document.getElementById('modal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalMedia = document.getElementById('modalMedia');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalOk = document.getElementById('modalOk');
+  const signatureText = document.getElementById('signatureText');
+
+  // إعداد الخلفية و الصور
+  bg.style.backgroundImage = `url("${settings.images.background}")`;
+  heroTree.src = settings.images.tree;
+  gameTree.src = settings.images.tree;
+
+  // حالة اللعبة
+  const state = {
+    lang: 'nl',
+    wordRaw: '',
+    wordChars: [],
+    maxApples: 0,
+    apples: [],
+    fallenCount: 0,
+    slots: [],
+    alphabetButtons: [],
+    audioEnabled: !!settings.options.sound_enabled,
+    successIndex: 0,
+    failIndex: 0,
+    arabicWords: null
+  };
+
+  // تحميل قائمة كلمات عربية محلية
+  async function loadArabicWords(){
+    try{
+      const resp = await fetch(settings.options.arabicWordsFile);
+      if(!resp.ok) throw new Error('no ar words');
+      state.arabicWords = await resp.json();
+    }catch(e){
+      state.arabicWords = null;
+      console.warn('لم يتم تحميل ملف كلمات عربية محلي:', e);
+    }
+  }
+  await loadArabicWords();
+
+  // أصوات
+  function playAudio(src, vol=1){
+    if(!state.audioEnabled) return;
+    try{
+      const a = new Audio(src);
+      a.volume = Math.min(1, vol);
+      a.play().catch(()=>{});
+    }catch(e){ console.warn('audio play error', e); }
+  }
+
+  function uiClick(){ playAudio(settings.sounds.click, 0.12); }
+  function playBirds(){ if(state.audioEnabled) { try{ birdsAudio.play().catch(()=>{}); }catch(e){} } }
+  function stopBirds(){ try{ birdsAudio.pause(); birdsAudio.currentTime = 0; }catch(e){} }
+
+  // birds loop
+  const birdsAudio = new Audio(settings.sounds.birds);
+  birdsAudio.loop = true;
+  birdsAudio.volume = 0.25;
+
+  // تفعيل/إيقاف صوت
+  soundToggle.textContent = state.audioEnabled ? 'Sound: on' : 'Sound: off';
+  soundToggle.addEventListener('click', ()=>{
+    state.audioEnabled = !state.audioEnabled;
+    soundToggle.textContent = state.audioEnabled ? 'Sound: on' : 'Sound: off';
+    uiClick();
+    if(state.audioEnabled) playBirds(); else stopBirds();
+  });
+
+  // بدء تشغيل أصوات الطيور بعد أول نقرة
+  document.addEventListener('click', function first(){
+    if(state.audioEnabled) playBirds();
+    document.removeEventListener('click', first);
+  });
+
+  // لغة افتراضية
+  function updateInputPlaceholder() {
+    if(state.lang === 'ar') {
+      wordInput.placeholder = 'اكتب الكلمة...';
+    } else if(state.lang === 'en') {
+      wordInput.placeholder = 'Type the word...';
+    } else {
+      wordInput.placeholder = 'Typ het woord...';
+    }
+  }
+
+  langEls.forEach(el=>{
+    el.addEventListener('click', ()=>{
+      langEls.forEach(x=>x.classList.remove('active'));
+      el.classList.add('active');
+      state.lang = el.dataset.lang;
+      updateInputPlaceholder();
+      uiClick();
+    })
+  });
+
+  // render hero apples (صفحة البداية)
+  function renderHeroApples(){
+    heroApples.innerHTML = '';
+    const positions = [
+      {x:13,y:-2},{x:23,y:5},{x:33,y:-2},{x:43,y:5},{x:53,y:-2},{x:63,y:5},{x:73,y:-2},
+      {x:4,y:30},{x:14,y:37},{x:24,y:30},{x:34,y:37},{x:44,y:30},{x:54,y:37},{x:64,y:30},{x:74,y:37},{x:84,y:30}
+      
+    ];
+    const label = 'KHALEDSAPPELBOOM'.split('');
+    positions.forEach((p,i)=>{
+      const w = document.createElement('div'); w.className='apple-item';
+      w.style.left = p.x + '%'; w.style.top = p.y + '%';
+      const img = document.createElement('img');
+      img.src = settings.images.appleTransparent;
+      img.style.width = '38px';
+      img.style.height = 'auto';
+      img.style.opacity = '0.85';
+      w.appendChild(img);
+      const span = document.createElement('div');
+      span.textContent = label[i % label.length];
+      span.style.position='absolute'; span.style.left='50%'; span.style.top='50%';
+      span.style.transform='translate(-50%,-52%)'; span.style.fontWeight='900'; span.style.fontSize='18px'; span.style.color='#000';
+      w.appendChild(span);
+      heroApples.appendChild(w);
+    });
+  }
+  renderHeroApples();
+
+  /* ========== 🆕 إدخال: عرض نقاط بدلاً من الأحرف ========== */
+  wordInput.addEventListener('input', ()=> {
+    // النقاط تظهر تلقائياً عبر CSS - لا حاجة لعرض أي شيء إضافي
+  });
+
+  /* =================== بدء اللعبة =================== */
+  async function checkDictionary(word){
+    if(!settings.options.check_dictionary_online) return true;
+    if(state.lang === 'en' || state.lang === 'nl'){
+      const langCode = state.lang === 'en' ? 'en' : 'nl';
+      const url = `https://api.dictionaryapi.dev/api/v2/entries/${langCode}/${encodeURIComponent(word)}`;
+      try{
+        const res = await fetch(url);
+        if(res.ok) return true;
+        else return false;
+      }catch(e){
+        console.warn('Dictionary API error', e);
+        return false;
+      }
+    } else if(state.lang === 'ar'){
+      if(!state.arabicWords) return false;
+      return state.arabicWords.includes(word);
+    }
+    return false;
+  }
+
+  startBtn.addEventListener('click', async ()=>{
+    uiClick();
+    const raw = (wordInput.value || '').trim();
+    if(!raw){
+      alert(state.lang==='ar' ? 'الرجاء إدخال كلمة.' : (state.lang==='nl' ? 'Voer een woord in.' : 'Please enter a word.'));
+      return;
+    }
+    const word = state.lang === 'ar' ? raw : raw.toUpperCase();
+    if(settings.options.check_dictionary_online){
+      const ok = await checkDictionary(word);
+      if(!ok){
+        modalTitle.textContent = state.lang==='ar' ? 'الكلمة غير موجودة' : 'Word not found';
+        modalDesc.textContent = state.lang==='ar' ? 'الكلمة غير موجودة في القاموس. راجع التهجئة.' : 'Word not found in dictionary. Check spelling.';
+        modalMedia.innerHTML = '';
+        modal.classList.add('show');
+        playAudio(settings.sounds.failList[0], 0.18);
+        return;
+      }
+    }
+    state.wordRaw = word;
+    state.wordChars = word.split('');
+    state.maxApples = word.replace(/\s/g,'').length;
+    pageSetup.classList.remove('active');
+    pageGame.classList.add('active');
+    buildGameBoard();
+  });
+
+  modalOk.addEventListener('click', ()=>{
+    uiClick();
+    modal.classList.remove('show');
+  });
+
+  /* ========================= بناء واجهة اللعبة ========================= */
+  function buildGameBoard(){
+    treeApples.innerHTML = ''; fallenColumns.innerHTML = ''; slotsRow.innerHTML = ''; alphabetDiv.innerHTML = '';
+    state.apples = []; state.slots = []; state.alphabetButtons = []; state.fallenCount = 0;
+
+    const n = state.maxApples;
+    let appleSize = settings.options.appleSizeBasePx;
+    if(n>12) appleSize = Math.max(30, appleSize - 6);
+    if(n>20) appleSize = Math.max(24, appleSize - 10);
+
+    const cols = Math.min(6, Math.ceil(Math.sqrt(n)));
+    const rows = Math.ceil(n/cols);
+    let idx = 0;
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        if(idx>=n) break;
+        const left = 4 + (c + (r%2?0.16:0)) * (62/cols) + (Math.random()*4 -2); //تحريك التفاحات في الشجرة الثانية
+        const top = 10 + r * (70/rows) + (Math.random()*6 -3);
+        const wrap = document.createElement('div'); wrap.className='apple-item';
+        wrap.style.left = left + '%'; wrap.style.top = top + '%';
+        wrap.dataset.index = idx; wrap.dataset.fallen = 'false';
+        const img = document.createElement('img'); img.src = settings.images.apple; img.style.width = appleSize + 'px';
+        wrap.appendChild(img);
+        treeApples.appendChild(wrap);
+        state.apples.push(wrap);
+        idx++;
+      }
+    }
+
+    renderSlots();
+    renderAlphabet();
+
+    document.documentElement.style.setProperty('--slot-font', settings.options.slotFontSizePx + 'px');
+    document.documentElement.style.setProperty('--slot-gap', settings.options.slotUnderscoreSpacing + 'px');
+  }
+
+  function renderSlots(){
+    slotsRow.innerHTML = ''; state.slots = [];
+    state.wordChars.forEach((ch, i)=>{
+      const s = document.createElement('div'); s.className = 'slot'; s.dataset.pos = i;
+      if(ch === ' ') { s.classList.add('space'); s.textContent = ' '; } else { s.textContent = '_'; }
+      slotsRow.appendChild(s); state.slots.push(s);
+    });
+  }
+
+  const ALPHABETS = {
+    nl: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","Á","È","Ë","Ö","Ü"],
+    en: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
+    ar: ["ا","أ","إ","آ","ب","ت","ث","ج","ح","خ","د","ذ","ر","ز","س","ش","ص","ض","ط","ظ","ع","غ","ف","ق","ك","ل","م","ن","ه","و","ؤ","ي","ئ","ى"]
+  };
+
+  function renderAlphabet(){
+    alphabetDiv.innerHTML = '';
+    const arr = ALPHABETS[state.lang] || ALPHABETS.nl;
+    const letters = (state.lang === 'ar') ? arr.slice().reverse() : arr.slice();
+    letters.forEach(l=>{
+      const btn = document.createElement('button'); btn.className='letter-btn'; btn.textContent = l; btn.dataset.letter = l;
+      btn.addEventListener('click', onLetterClick); alphabetDiv.appendChild(btn); state.alphabetButtons.push(btn);
+    });
+    alphabetDiv.style.direction = (state.lang==='ar') ? 'rtl' : 'ltr';
+    optimizeForMobile(); // 🆕 تحسين للجوال
+  }
+
+  function onLetterClick(e){
+    const btn = e.currentTarget; if(btn.classList.contains('disabled')) return;
+    btn.classList.add('disabled'); btn.disabled = true; uiClick();
+    const letter = btn.dataset.letter;
+    handleGuess(letter);
+  }
+
+  function handleGuess(letter){
+    let match = false;
+    state.wordChars.forEach(ch => {
+      if(ch === ' ') return;
+      if(state.lang === 'ar'){ if(ch === letter) match = true; }
+      else { if(ch.toUpperCase() === letter.toUpperCase()) match = true; }
+    });
+
+    if(match){
+      revealLetter(letter);
+      
+      // 🆕 تحقق إذا كانت هذه آخر حرف قبل الفوز
+      const isLastLetter = checkIfLastLetter();
+      
+      if (!isLastLetter) {
+        // تشغيل صوت النجاح فقط إذا لم تكن آخر حرف
+        const list = settings.sounds.successList || [];
+        if(list.length) playAudio(list[state.successIndex % list.length], 0.18);
+        state.successIndex++;
+      }
+      
+      checkWin();
+    } else {
+      triggerAppleFall(letter);
+    }
+  }
+
+  // 🆕 دالة للتحقق إذا كان هذا آخر حرف
+  function checkIfLastLetter() {
+    let revealedCount = 0;
+    state.wordChars.forEach((ch, idx) => {
+      if(ch !== ' ' && state.slots[idx].textContent !== '_') {
+        revealedCount++;
+      }
+    });
+    return revealedCount + 0 >= state.maxApples;
+  }
+
+  function revealLetter(letter){
+    state.wordChars.forEach((ch, idx)=>{
+      if(ch === ' ') return;
+      const equal = (state.lang === 'ar') ? (ch === letter) : (ch.toUpperCase() === letter.toUpperCase());
+      if(equal){
+        state.slots[idx].textContent = ch;
+        state.slots[idx].style.color = '#0b8a3a';
+        state.slots[idx].style.fontSize = (settings.options.slotFontSizePx + 6) + 'px';
+      }
+    });
+  }
+
+  function triggerAppleFall(letter){
+    const appleEl = state.apples.find(a => a.dataset.fallen === 'false');
+    if(!appleEl) return;
+    appleEl.dataset.fallen = 'true';
+    appleEl.style.opacity = '0.14';
+
+    state.fallenCount++;
+    
+    // 🆕 تحقق إذا كانت آخر تفاحة
+    const isLastApple = state.fallenCount >= state.maxApples;
+    
+    const rect = appleEl.getBoundingClientRect();
+    const clone = appleEl.cloneNode(true);
+    clone.style.position = 'fixed';
+    clone.style.left = (rect.left + rect.width/2) + 'px';
+    clone.style.top = (rect.top + rect.height/2) + 'px';
+    clone.style.transform = 'translate(-50%,-50%) scale(1)';
+    clone.style.zIndex = 9999;
+    document.body.appendChild(clone);
+
+    const perCol = settings.options.maxApplesPerColumn || 3;
+    const colIndex = Math.floor((state.fallenCount - 1) / perCol);
+    let colEl = fallenColumns.querySelector(`.fallen-column[data-col='${colIndex}']`);
+    if(!colEl){ colEl = document.createElement('div'); colEl.className = 'fallen-column'; colEl.dataset.col = colIndex; fallenColumns.appendChild(colEl); }
+
+    const temp = document.createElement('div'); temp.style.width='1px'; temp.style.height='1px'; temp.style.opacity='0';
+    colEl.appendChild(temp);
+    const targetRect = temp.getBoundingClientRect();
+
+    // 🆕 تشغيل صوت السقوط فقط إذا لم تكن آخر تفاحة
+    if(!isLastApple && state.audioEnabled) playAudio(settings.sounds.fallWhistle, 0.16);
+
+    const fallDur = settings.options.fallDurationMs || 700;
+    const bounceDur = settings.options.bounceDurationMs || 420;
+    const tilt = settings.options.bounceTiltDeg || 28;
+
+    requestAnimationFrame(()=> {
+      clone.style.transition = `top ${fallDur}ms cubic-bezier(.2,.9,.2,1)`;
+      clone.style.top = (targetRect.top - 28) + 'px';
+    });
+
+    setTimeout(()=>{
+      // 🆕 تشغيل صوت الاصطدام فقط إذا لم تكن آخر تفاحة
+      if(!isLastApple && state.audioEnabled) playAudio(settings.sounds.impact, 0.16);
+      const tx = targetRect.left + (targetRect.width/2);
+      const ty = targetRect.top + (targetRect.height/2);
+      clone.style.transition = `left ${bounceDur}ms cubic-bezier(.2,.9,.2,1), top ${bounceDur}ms cubic-bezier(.2,.9,.2,1), transform ${bounceDur}ms ease`;
+      clone.style.left = tx + 'px';
+      clone.style.top = ty + 'px';
+      clone.style.transform = `translate(-50%,-50%) scale(0.92) rotate(${tilt}deg)`;
+      if(!isLastApple && state.audioEnabled && settings.sounds.slide) playAudio(settings.sounds.slide, 0.12);
+    }, fallDur + 20);
+
+    setTimeout(()=>{
+      if(clone && clone.parentNode) clone.parentNode.removeChild(clone);
+      const item = document.createElement('div'); item.className='fallen-item';
+      const imgWrap = document.createElement('div'); imgWrap.innerHTML = appleEl.innerHTML;
+      imgWrap.querySelector('img').style.width = '44px';
+      const letterEl = document.createElement('div'); letterEl.className='fallen-letter'; letterEl.textContent = letter;
+      item.appendChild(imgWrap); item.appendChild(letterEl);
+      colEl.appendChild(item);
+      if(temp && temp.parentNode) temp.parentNode.removeChild(temp);
+      
+      // 🆕 تشغيل صوت الفشل فقط إذا لم تكن آخر تفاحة
+      if(!isLastApple) {
+        const fl = settings.sounds.failList || [];
+        if(fl.length) playAudio(fl[state.failIndex % fl.length], 0.18);
+        state.failIndex++;
+      }
+      
+      checkLose();
+    }, fallDur + bounceDur + 60);
+  }
+
+  function checkWin(){
+  const unfinished = state.slots.some(s => s.textContent === '_');
+  if(!unfinished){
+    state.slots.forEach(s=>{ if(s.textContent !== ' ') s.style.color = '#0b8a3a'; });
+    modalTitle.textContent = state.lang==='ar' ? 'مبروك!' : (state.lang==='nl' ? 'Gefeliciteerd!' : 'Congratulations!');
+    modalDesc.textContent = (state.lang==='ar') ? 'لقد خمنت الكلمة!' : `The word was: ${state.wordRaw}`;
+    modalMedia.innerHTML = `<img src="${settings.images.crowdWin}" alt="win" onerror="this.style.display='none'">`;
+    modal.classList.add('show');
+    
+    // 🆕 تشغيل صوت رسالة النجاح بعد فترة بسيطة
+    setTimeout(() => {
+      if(settings.sounds.successMessage) playAudio(settings.sounds.successMessage, 0.22);
+    }, 300);
+  }
+}
+
+  function checkLose(){
+  if(state.fallenCount >= state.maxApples){
+    state.slots.forEach((slot, idx)=>{ const ch = state.wordChars[idx]; if(ch === ' ') return; slot.textContent = ch; slot.style.color = '#c73737';});
+    modalTitle.textContent = state.lang==='ar' ? 'انتهت التفاحات' : (state.lang==='nl' ? 'Alle appels zijn gevallen' : 'Apples finished');
+    modalDesc.textContent = (state.lang==='ar') ? `الكلمة كانت: ${state.wordRaw}` : `The word was: ${state.wordRaw}`;
+    modalMedia.innerHTML = `<img src="${settings.images.crowdFail}" alt="fail" onerror="this.style.display='none'">`;
+    modal.classList.add('show');
+    
+    // 🆕 تشغيل صوت رسالة الفشل بعد فترة بسيطة
+    setTimeout(() => {
+      if(settings.sounds.failMessage) playAudio(settings.sounds.failMessage, 0.22);
+    }, 300);
+  }
+}
+
+  // reset to setup
+  newBtn.addEventListener('click', ()=>{
+    uiClick();
+    pageGame.classList.remove('active'); pageSetup.classList.add('active');
+    treeApples.innerHTML = ''; fallenColumns.innerHTML = ''; slotsRow.innerHTML = ''; alphabetDiv.innerHTML = '';
+    wordInput.value = '';
+    state.wordRaw = ''; state.wordChars = []; state.maxApples = 0; state.apples = []; state.fallenCount = 0; state.slots = [];
+  });
+
+  // enter key starts
+  wordInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ uiClick(); startBtn.click(); }
+  });
+
+  // expose for debug
+  window.Appelboom = { settings, state };
+
+})();
+</script>
+</body>
+</html>
