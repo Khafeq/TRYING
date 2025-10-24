@@ -9,7 +9,7 @@ const settings = {
   
   // ========== 🖼️ قسم الصور ==========
   images: {
-    background: "assets/images/background.jpg",   // خلفية اللعبة
+    background: "assets/images/background.JPG",   // خلفية اللعبة
     tree: "assets/images/tree.png",               // صورة الشجرة
     apple: "assets/images/apple.png",             // التفاحة العادية
     appleTransparent: "assets/images/apple_transparent.png", // التفاحة الشفافة
@@ -233,4 +233,5 @@ const settings = {
     4. الأزرار يجب أن تكون سهلة الضغط بالأصابع
 
  🚀 بعد التعديل، احفظ الملف ثم 새دء الصفحة على الجوال لرؤية التغييرات
+
 */
