@@ -2,8 +2,8 @@
 <html lang="ar">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title> AppelBoom v7.0 - Designed by ME</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>AppelBoom v7.0 - Designed by ME</title>
 <style>
   /* ---------- تصميم عام وحل مشاكل التنسيق للصور ---------- */
   :root{
@@ -45,7 +45,7 @@
     width:86%;max-width:760px;aspect-ratio: 4/3;position:relative;
     display:flex;align-items:center;justify-content:center;
   }
-  .tree-img{position:absolute;left:43%;top:50%;transform:translate(-50%,-50%);width:100%;height:135%;object-fit:cover;border-radius:8px} //تحريك الشجرة الأولى
+  .tree-img{position:absolute;left:43%;top:50%;transform:translate(-50%,-50%);width:100%;height:135%;object-fit:cover;border-radius:8px}
   /* طبقة التفاحات داخل الشجرة (نستخدم نسبة داخل إطار الشجرة) */
   .hero-apples, .tree-apples{position:absolute;left:7%;top:8%;width:86%;height:84%;pointer-events:none}
   .apple-item{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center}
@@ -92,14 +92,11 @@
   .game{height:100%;display:grid;grid-template-columns:1fr 460px;gap:12px;align-items:start}
   .left-game{position:relative;display:flex;align-items:center;justify-content:center}
   .game-tree-frame{width:92%;max-width:740px;aspect-ratio: 4/3;position:relative}
-  .game-tree-img{position:absolute;left:30%;top:70%;transform:translate(-50%,-50%);width:100%;height:150%;object-fit:cover;border-radius:8px} // تحريك الشجرة الثانية
+  .game-tree-img{position:absolute;left:30%;top:70%;transform:translate(-50%,-50%);width:100%;height:150%;object-fit:cover;border-radius:8px}
   .tree-apples{position:absolute;left:7%;top:8%;width:86%;height:84%;pointer-events:none}
 
   .right-col{display:flex;flex-direction:column;gap:10px;padding:6px;height:100%}
   .slots-row{display:flex;justify-content:center;gap:var(--slot-gap,12px);align-items:center;min-height:100px}
-slotsRow.style.justifyContent = "flex-start"; // 🔸 يحرك الكلمة إلى اليسار
-slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حافة الشاشة (اختياري)
-
   .slot{min-width:36px;border-bottom:3px solid rgba(255,255,255,0.12);padding:6px 8px;text-align:center;font-weight:900;font-size:var(--slot-font,30px);color:#fff}
   .slot.space{border-bottom:none}
   .alphabet{display:flex;flex-wrap:wrap;gap:8px;padding:8px;border-radius:8px;min-height:160px;align-items:flex-start;overflow:auto;justify-content:center}
@@ -124,9 +121,7 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
 
   .signature{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,0.92);padding:8px;border-radius:8px;font-size:13px;z-index:8}
 
-  @media (max-width:1100px){ .setup{grid-template-columns:64px 1fr} .game{grid-template-columns:1fr} .tree-frame{width:92%} .game-tree-frame{width:98%} .input-container{right:10px;top:100px;width:180px} .start-col{right:10px;bottom:100px} }
-
-  /* 🆕 تحسينات الجوال البسيطة */
+  /* 🆕 تحسينات الجوال */
   @media (max-width: 768px) {
     .wrap {
       padding: 5px;
@@ -217,6 +212,15 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
       transform: translateX(-50%);
     }
   }
+
+  @media (max-width:1100px){ 
+    .setup{grid-template-columns:64px 1fr} 
+    .game{grid-template-columns:1fr} 
+    .tree-frame{width:92%} 
+    .game-tree-frame{width:98%} 
+    .input-container{right:10px;top:100px;width:180px} 
+    .start-col{right:10px;bottom:100px} 
+  }
 </style>
 </head>
 <body>
@@ -227,7 +231,7 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
       <div id="bg" class="bg"></div>
 
       <header>
-        <div class="title">Appelboom V7.0 - Designed by ME </div>
+        <div class="title">Appelboom V7.0 - Designed by ME</div>
         <div class="controls">
           <button id="soundToggle" class="sound-toggle">Sound: on</button>
         </div>
@@ -283,12 +287,14 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
         </div>
       </section>
 
-      <div class="modal" id="modal"><div class="modal-card">
-        <h2 id="modalTitle"></h2>
-        <div id="modalMedia"></div>
-        <p id="modalDesc"></p>
-        <button id="modalOk" class="modal-btn">OK</button>
-      </div></div>
+      <div class="modal" id="modal">
+        <div class="modal-card">
+          <h2 id="modalTitle"></h2>
+          <div id="modalMedia"></div>
+          <p id="modalDesc"></p>
+          <button id="modalOk" class="modal-btn">OK</button>
+        </div>
+      </div>
 
       <div class="signature" id="signature">
         <small id="signatureText"></small>
@@ -297,7 +303,7 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
   </div>
 
 <script>
-/* ================= Appelboom v7
+/* ================= Appelboom v7 - Mobile Optimized
    - يعتمد على config.js (تأكد أنه محمّل)
    - تحقق أونلاين للمفردات: dictionaryapi.dev للـ en و nl
    - للعربية: ملف محلي assets/words_ar.json يُحمّل ويُبحث داخله
@@ -308,25 +314,9 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
     alert('الملف config.js غير موجود. الرجاء وضعه في نفس المجلد.');
     return;
   }
-  // 🆕 كشف الجوال وإضافة touch events
+
+  // 🆕 كشف الجوال
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  
-  // تحسين أزرار الحروف للجوال
-  function optimizeForMobile() {
-    if (isMobile) {
-      // جعل أزرار الحروف أكبر لللمس
-      document.querySelectorAll('.letter-btn').forEach(btn => {
-        btn.style.minWidth = '44px';
-        btn.style.minHeight = '44px';
-        btn.style.padding = '12px';
-      });
-      
-      // تحسين أزرار التحكم
-      document.querySelectorAll('button').forEach(btn => {
-        btn.style.minHeight = '44px';
-      });
-    }
-  }
 
   // عناصر DOM
   const bg = document.getElementById('bg');
@@ -356,6 +346,19 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
   bg.style.backgroundImage = `url("${settings.images.background}")`;
   heroTree.src = settings.images.tree;
   gameTree.src = settings.images.tree;
+
+  // 🆕 تطبيق الإعدادات المتقدمة إذا كانت موجودة
+  if (settings.advanced) {
+    if (settings.advanced.tree && settings.advanced.tree.setupPage) {
+      heroTree.style.width = settings.advanced.tree.setupPage.width;
+      heroTree.style.maxWidth = settings.advanced.tree.setupPage.maxWidth;
+    }
+    
+    if (settings.advanced.tree && settings.advanced.tree.gamePage) {
+      gameTree.style.width = settings.advanced.tree.gamePage.width;
+      gameTree.style.maxWidth = settings.advanced.tree.gamePage.maxWidth;
+    }
+  }
 
   // حالة اللعبة
   const state = {
@@ -447,7 +450,6 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
     const positions = [
       {x:13,y:-2},{x:23,y:5},{x:33,y:-2},{x:43,y:5},{x:53,y:-2},{x:63,y:5},{x:73,y:-2},
       {x:4,y:30},{x:14,y:37},{x:24,y:30},{x:34,y:37},{x:44,y:30},{x:54,y:37},{x:64,y:30},{x:74,y:37},{x:84,y:30}
-      
     ];
     const label = 'KHALEDSAPPELBOOM'.split('');
     positions.forEach((p,i)=>{
@@ -543,7 +545,7 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
     for(let r=0;r<rows;r++){
       for(let c=0;c<cols;c++){
         if(idx>=n) break;
-        const left = 4 + (c + (r%2?0.16:0)) * (62/cols) + (Math.random()*4 -2); //تحريك التفاحات في الشجرة الثانية
+        const left = 4 + (c + (r%2?0.16:0)) * (62/cols) + (Math.random()*4 -2);
         const top = 10 + r * (70/rows) + (Math.random()*6 -3);
         const wrap = document.createElement('div'); wrap.className='apple-item';
         wrap.style.left = left + '%'; wrap.style.top = top + '%';
@@ -583,11 +585,24 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
     const arr = ALPHABETS[state.lang] || ALPHABETS.nl;
     const letters = (state.lang === 'ar') ? arr.slice().reverse() : arr.slice();
     letters.forEach(l=>{
-      const btn = document.createElement('button'); btn.className='letter-btn'; btn.textContent = l; btn.dataset.letter = l;
-      btn.addEventListener('click', onLetterClick); alphabetDiv.appendChild(btn); state.alphabetButtons.push(btn);
+      const btn = document.createElement('button'); 
+      btn.className='letter-btn'; 
+      btn.textContent = l; 
+      btn.dataset.letter = l;
+      
+      // 🆕 تحسين للجوال
+      if (isMobile) {
+        btn.style.minWidth = '44px';
+        btn.style.minHeight = '44px';
+        btn.style.padding = '12px';
+        btn.style.fontSize = '16px';
+      }
+      
+      btn.addEventListener('click', onLetterClick); 
+      alphabetDiv.appendChild(btn); 
+      state.alphabetButtons.push(btn);
     });
     alphabetDiv.style.direction = (state.lang==='ar') ? 'rtl' : 'ltr';
-    optimizeForMobile(); // 🆕 تحسين للجوال
   }
 
   function onLetterClick(e){
@@ -608,11 +623,9 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
     if(match){
       revealLetter(letter);
       
-      // 🆕 تحقق إذا كانت هذه آخر حرف قبل الفوز
       const isLastLetter = checkIfLastLetter();
       
       if (!isLastLetter) {
-        // تشغيل صوت النجاح فقط إذا لم تكن آخر حرف
         const list = settings.sounds.successList || [];
         if(list.length) playAudio(list[state.successIndex % list.length], 0.18);
         state.successIndex++;
@@ -624,7 +637,6 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
     }
   }
 
-  // 🆕 دالة للتحقق إذا كان هذا آخر حرف
   function checkIfLastLetter() {
     let revealedCount = 0;
     state.wordChars.forEach((ch, idx) => {
@@ -655,7 +667,6 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
 
     state.fallenCount++;
     
-    // 🆕 تحقق إذا كانت آخر تفاحة
     const isLastApple = state.fallenCount >= state.maxApples;
     
     const rect = appleEl.getBoundingClientRect();
@@ -676,7 +687,6 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
     colEl.appendChild(temp);
     const targetRect = temp.getBoundingClientRect();
 
-    // 🆕 تشغيل صوت السقوط فقط إذا لم تكن آخر تفاحة
     if(!isLastApple && state.audioEnabled) playAudio(settings.sounds.fallWhistle, 0.16);
 
     const fallDur = settings.options.fallDurationMs || 700;
@@ -689,7 +699,6 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
     });
 
     setTimeout(()=>{
-      // 🆕 تشغيل صوت الاصطدام فقط إذا لم تكن آخر تفاحة
       if(!isLastApple && state.audioEnabled) playAudio(settings.sounds.impact, 0.16);
       const tx = targetRect.left + (targetRect.width/2);
       const ty = targetRect.top + (targetRect.height/2);
@@ -710,7 +719,6 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
       colEl.appendChild(item);
       if(temp && temp.parentNode) temp.parentNode.removeChild(temp);
       
-      // 🆕 تشغيل صوت الفشل فقط إذا لم تكن آخر تفاحة
       if(!isLastApple) {
         const fl = settings.sounds.failList || [];
         if(fl.length) playAudio(fl[state.failIndex % fl.length], 0.18);
@@ -722,35 +730,33 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
   }
 
   function checkWin(){
-  const unfinished = state.slots.some(s => s.textContent === '_');
-  if(!unfinished){
-    state.slots.forEach(s=>{ if(s.textContent !== ' ') s.style.color = '#0b8a3a'; });
-    modalTitle.textContent = state.lang==='ar' ? 'مبروك!' : (state.lang==='nl' ? 'Gefeliciteerd!' : 'Congratulations!');
-    modalDesc.textContent = (state.lang==='ar') ? 'لقد خمنت الكلمة!' : `The word was: ${state.wordRaw}`;
-    modalMedia.innerHTML = `<img src="${settings.images.crowdWin}" alt="win" onerror="this.style.display='none'">`;
-    modal.classList.add('show');
-    
-    // 🆕 تشغيل صوت رسالة النجاح بعد فترة بسيطة
-    setTimeout(() => {
-      if(settings.sounds.successMessage) playAudio(settings.sounds.successMessage, 0.22);
-    }, 300);
+    const unfinished = state.slots.some(s => s.textContent === '_');
+    if(!unfinished){
+      state.slots.forEach(s=>{ if(s.textContent !== ' ') s.style.color = '#0b8a3a'; });
+      modalTitle.textContent = state.lang==='ar' ? 'مبروك!' : (state.lang==='nl' ? 'Gefeliciteerd!' : 'Congratulations!');
+      modalDesc.textContent = (state.lang==='ar') ? 'لقد خمنت الكلمة!' : `The word was: ${state.wordRaw}`;
+      modalMedia.innerHTML = `<img src="${settings.images.crowdWin}" alt="win" onerror="this.style.display='none'">`;
+      modal.classList.add('show');
+      
+      setTimeout(() => {
+        if(settings.sounds.successMessage) playAudio(settings.sounds.successMessage, 0.22);
+      }, 300);
+    }
   }
-}
 
   function checkLose(){
-  if(state.fallenCount >= state.maxApples){
-    state.slots.forEach((slot, idx)=>{ const ch = state.wordChars[idx]; if(ch === ' ') return; slot.textContent = ch; slot.style.color = '#c73737';});
-    modalTitle.textContent = state.lang==='ar' ? 'انتهت التفاحات' : (state.lang==='nl' ? 'Alle appels zijn gevallen' : 'Apples finished');
-    modalDesc.textContent = (state.lang==='ar') ? `الكلمة كانت: ${state.wordRaw}` : `The word was: ${state.wordRaw}`;
-    modalMedia.innerHTML = `<img src="${settings.images.crowdFail}" alt="fail" onerror="this.style.display='none'">`;
-    modal.classList.add('show');
-    
-    // 🆕 تشغيل صوت رسالة الفشل بعد فترة بسيطة
-    setTimeout(() => {
-      if(settings.sounds.failMessage) playAudio(settings.sounds.failMessage, 0.22);
-    }, 300);
+    if(state.fallenCount >= state.maxApples){
+      state.slots.forEach((slot, idx)=>{ const ch = state.wordChars[idx]; if(ch === ' ') return; slot.textContent = ch; slot.style.color = '#c73737';});
+      modalTitle.textContent = state.lang==='ar' ? 'انتهت التفاحات' : (state.lang==='nl' ? 'Alle appels zijn gevallen' : 'Apples finished');
+      modalDesc.textContent = (state.lang==='ar') ? `الكلمة كانت: ${state.wordRaw}` : `The word was: ${state.wordRaw}`;
+      modalMedia.innerHTML = `<img src="${settings.images.crowdFail}" alt="fail" onerror="this.style.display='none'">`;
+      modal.classList.add('show');
+      
+      setTimeout(() => {
+        if(settings.sounds.failMessage) playAudio(settings.sounds.failMessage, 0.22);
+      }, 300);
+    }
   }
-}
 
   // reset to setup
   newBtn.addEventListener('click', ()=>{
@@ -765,6 +771,9 @@ slotsRow.style.marginLeft = "30px"; // 🔸 لتبتعد قليلاً عن حا�
   wordInput.addEventListener('keydown', function(e){
     if(e.key === 'Enter'){ uiClick(); startBtn.click(); }
   });
+
+  // توقيع
+  signatureText.textContent = "AppelBoom v7.0 © 2025";
 
   // expose for debug
   window.Appelboom = { settings, state };
