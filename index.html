@@ -897,6 +897,11 @@ header .controls {
         height: 45vh;
     }
 }
+
+/* تحسينات للانتقال بين الاتجاهات */
+.orientation-transition {
+    transition: all 0.3s ease-in-out;
+}
 </style>
 </head>
 <body>
@@ -1064,15 +1069,91 @@ const settings = {
 
     // كشف اتجاه الشاشة
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
     
-    // إضافة كلاس للجسم للإشارة إلى اتجاه الشاشة
-    if (isMobile) {
-        if (isPortrait) {
-            document.body.classList.add('mobile-portrait');
-        } else {
-            document.body.classList.add('mobile-landscape');
+    // دالة لتحديث اتجاه الشاشة
+    function updateOrientationClasses() {
+        const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+        document.body.classList.remove('mobile-portrait', 'mobile-landscape');
+        
+        if (isMobile) {
+            if (isPortrait) {
+                document.body.classList.add('mobile-portrait');
+            } else {
+                document.body.classList.add('mobile-landscape');
+            }
         }
+        
+        // تحديث العناصر الديناميكية
+        updateDynamicElements();
+    }
+
+    // دالة لتحديث العناصر الديناميكية
+    function updateDynamicElements() {
+        const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+        
+        // إذا كنا في صفحة اللعبة، نحدث العناصر
+        if (pageGame.classList.contains('active')) {
+            // إعادة ضبط أبعاد الشجرة
+            adjustTreeSize();
+            
+            // إعادة حساب مواقع التفاح الساقط
+            repositionFallenApples();
+            
+            // إعادة بناء لوحة الحروف إذا لزم الأمر
+            if (state.alphabetButtons.length > 0) {
+                adjustAlphabetButtons();
+            }
+        }
+    }
+
+    // ضبط أبعاد الشجرة حسب الاتجاه
+    function adjustTreeSize() {
+        const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+        const gameTree = document.getElementById('gameTree');
+        const heroTree = document.getElementById('heroTree');
+        
+        if (isPortrait) {
+            if (gameTree) gameTree.style.width = "60%";
+            if (heroTree) heroTree.style.width = "95%";
+        } else {
+            if (gameTree) gameTree.style.width = "90%";
+            if (heroTree) heroTree.style.width = "85%";
+        }
+    }
+
+    // إعادة حساب مواقع التفاح الساقط
+    function repositionFallenApples() {
+        const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+        const fallenColumns = document.getElementById('fallenColumns');
+        if (!fallenColumns) return;
+        
+        const columns = fallenColumns.querySelectorAll('.fallen-column');
+        columns.forEach((col, index) => {
+            if (isPortrait) {
+                col.style.width = "70px";
+            } else {
+                col.style.width = "84px";
+            }
+        });
+    }
+
+    // ضبط أزرار الحروف
+    function adjustAlphabetButtons() {
+        const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+        
+        state.alphabetButtons.forEach(btn => {
+            if (isPortrait) {
+                btn.style.minWidth = "32px";
+                btn.style.minHeight = "32px";
+                btn.style.padding = "8px 10px";
+                btn.style.fontSize = "12px";
+            } else {
+                btn.style.minWidth = "38px";
+                btn.style.minHeight = "38px";
+                btn.style.padding = "10px 12px";
+                btn.style.fontSize = "14px";
+            }
+        });
     }
 
     // عناصر DOM
@@ -1399,6 +1480,9 @@ const settings = {
         
         document.documentElement.style.setProperty('--slot-font', settings.options.slotFontSizePx + 'px');
         document.documentElement.style.setProperty('--slot-gap', settings.options.slotUnderscoreSpacing + 'px');
+        
+        // تحديث العناصر بعد البناء
+        updateDynamicElements();
     }
 
     function renderSlots(){
@@ -1445,24 +1529,16 @@ const settings = {
             btn.textContent = l;
             btn.dataset.letter = l;
             
-            if (isMobile && isPortrait) {
-                btn.style.minWidth = '32px';
-                btn.style.minHeight = '32px';
-                btn.style.padding = '8px 10px';
-                btn.style.fontSize = '12px';
-            } else if (isMobile) {
-                btn.style.minWidth = '38px';
-                btn.style.minHeight = '38px';
-                btn.style.padding = '10px 12px';
-                btn.style.fontSize = '14px';
-            }
-            
+            // سيتم ضبط الأبعاد تلقائياً في updateDynamicElements
             btn.addEventListener('click', onLetterClick);
             alphabetDiv.appendChild(btn);
             state.alphabetButtons.push(btn);
         });
 
         alphabetDiv.style.direction = (state.lang==='ar') ? 'rtl' : 'ltr';
+        
+        // ضبط الأبعاد بعد الإنشاء
+        adjustAlphabetButtons();
     }
 
     function onLetterClick(e){
@@ -1677,16 +1753,29 @@ const settings = {
         }
     });
 
-    // كشف تغيير اتجاه الشاشة
+    // ================= 🆕 كشف تغيير اتجاه الشاشة بدون إعادة تحميل =================
+    
+    // التهيئة الأولية
+    updateOrientationClasses();
+    
+    // الاستماع لتغيير اتجاه الشاشة
     window.addEventListener('orientationchange', function() {
         setTimeout(() => {
-            window.location.reload();
-        }, 300);
+            updateOrientationClasses();
+        }, 100);
+    });
+    
+    // الاستماع لتغيير حجم النافذة (للتأكد من التحديث)
+    window.addEventListener('resize', function() {
+        setTimeout(() => {
+            updateOrientationClasses();
+        }, 150);
     });
 
     window.Appelboom = {
         settings,
-        state
+        state,
+        updateOrientationClasses // جعل الدالة متاحة globally للاختبار
     };
 })();
 </script>
