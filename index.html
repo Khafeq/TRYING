@@ -391,253 +391,288 @@ header .controls {
 }
 
 /* ================= 🆕 تحسينات الجوال المحسنة ================= */
-@media (max-width: 768px) {
-  .wrap {
-    padding: 5px;
-    height: 100vh;
-    display: block;
-  }
-  
-  .stage {
-    height: 100vh;
-    max-width: 100%;
-    border-radius: 0;
-  }
-  
-  .page {
-    height: calc(100vh - 20px);
-    padding: 10px;
-  }
-  
-  /* تحسينات الهيدر للجوال */
-  header .title {
-    bottom: 15px;
-    font-size: 14px;
-    padding: 8px 16px;
-    transform: translateX(-50%);
-    left: 50%;
-    width: auto;
-    white-space: nowrap;
-  }
-  
-  header .controls {
-    bottom: 15px;
-    right: 15px;
-  }
-  
-  .sound-toggle {
-    width: 40px;
-    height: 40px;
-  }
-  
-  /* تحسينات الصفحة الأولى للجوال */
+/* لا نغير أي شيء لسطح المكتب — فقط ال media queries التالية */
+@media (max-width: 1100px) and (orientation: landscape) {
+  /* Mobile landscape: نحافظ على ترتيب الديسكتوب تمامًا */
+  .stage { max-width: 1100px; padding: 6px; }
+  /* نصغر العناصر نسبياً لكن لا نغير الترتيب */
+  .tree-frame, .game-tree-frame { max-width: 78% !important; }
+  .input-container { width: 56% !important; right: 12px; top: 110px; }
+  .start-col { right: 12px; bottom: 100px; }
+  .lang-col { margin-top: 60px; }
+  .slots-row { min-height: 70px; margin-top: -10px; }
+  .letter-btn { padding: 8px 10px; min-width:36px; font-size:14px; }
+  .new-btn { padding: 28px 18px; min-height:50px; }
+  header .controls { right: 20px; bottom: 12px; }
+}
+
+/* ======= الجوال بورتريت (التصميم الخاص الذي طلبته) ======= */
+@media (max-width: 1100px) and (orientation: portrait) {
+
+  /* نعطي الـ stage كامل الارتفاع ونمنع القص الخارجي */
+  .wrap { padding: 0; height:100vh; display:block; }
+  .stage { max-width:100%; width:100%; height:100vh; border-radius:0; overflow:hidden; }
+
+  /* --- الصفحة الأولى (setup) --- */
   .setup {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    gap: 15px;
+    display: block;
     height: 100%;
+    padding: 0;
   }
-  
+
   .lang-col {
-    flex-direction: row;
-    justify-content: center;
-    order: 1;
-    margin-top: 20px;
+    position: absolute;
+    left: 12px;
+    top: 45%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
     gap: 8px;
+    z-index: 15;
+    margin-top: 0;
   }
-  
-  .lang-btn {
-    width: 60px;
-    height: 35px;
-    font-size: 12px;
-  }
-  
+
   .tree-wrap {
-    order: 2;
-    height: 40vh;
-  }
-  
-  .tree-frame {
-    width: 95% !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-top: 0 !important;
-  }
-  
-  .tree-img {
-    left: 50% !important;
-    height: 120% !important;
-  }
-  
-  .input-container {
-    position: relative;
-    width: 95% !important;
-    margin: 10px auto;
-    order: 3;
-    right: auto;
-    top: auto;
-  }
-  
-  .input-field {
-    padding: 14px 16px !important;
-    font-size: 18px !important;
-    min-height: 55px;
-  }
-  
-  .input-field.password-dots {
-    font-size: 22px !important;
-    letter-spacing: 6px !important;
-  }
-  
-  .start-col {
     position: relative;
     width: 100%;
-    order: 4;
-    right: auto;
-    bottom: auto;
-    margin-top: 10px;
+    height: 62vh; /* الشجرة تأخذ القسم الأكبر */
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
-  
-  .start-btn {
-    width: 200px;
-    padding: 18px 24px !important;
-    font-size: 20px !important;
-    min-height: 70px;
-    margin: 0 auto;
-  }
-  
-  /* تحسينات الصفحة الثانية للجوال */
-  .game {
-    grid-template-columns: 1fr;
-    grid-template-rows: 80px auto 1fr;
-    gap: 10px;
+
+  .tree-frame {
+    width: 92% !important;
+    max-width: none !important;
     height: 100%;
-  }
-  
-  .word-top-section {
-    grid-column: 1;
-    margin-top: 0;
-    padding: 5px;
-  }
-  
-  .slots-row {
-    min-height: 60px;
-    margin-top: 0 !important;
-    gap: 1px !important;
-  }
-  
-  /* أحجام الخطوط للجوال */
-  .short-word .slot {
-    font-size: 32px !important;
-    min-width: 28px !important;
+    margin-left:0 !important;
+    margin-top:0 !important;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
 
-  .medium-word .slot {
-    font-size: 26px !important;
-    min-width: 24px !important;
-  }
-
-  .long-word .slot {
-    font-size: 20px !important;
-    min-width: 20px !important;
-  }
-
-  .very-long-word .slot {
-    font-size: 16px !important;
-    min-width: 18px !important;
-  }
-
-  .extremely-long-word .slot {
-    font-size: 14px !important;
-    min-width: 16px !important;
-  }
-  
-  .left-game {
-    grid-row: 2;
-    padding-top: 10px;
-    height: 35vh;
-    justify-content: center;
-  }
-  
-  .game-tree-frame {
-    width: 90% !important;
-    max-width: 400px !important;
-    margin: 0 auto !important;
-    margin-left: 0 !important;
-    margin-top: 0 !important;
-  }
-  
-  .game-tree-img {
-    width: 100% !important;
-    height: 100% !important;
+  .tree-img {
+    position: absolute;
     left: 50% !important;
-    top: 50% !important;
+    top: 48%;
+    transform: translate(-50%,-50%);
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    z-index: 5;
   }
-  
-  .tree-apples {
-    left: 7% !important;
-    width: 86% !important;
-  }
-  
-  .right-col {
-    grid-row: 3;
-    height: auto;
-    max-height: 45vh;
-    gap: 8px;
-    padding: 5px;
-  }
-  
-  .alphabet {
-    min-height: 120px;
-    gap: 6px;
-    padding: 6px;
-  }
-  
-  .letter-btn {
-    padding: 10px 12px;
-    min-width: 38px;
-    font-size: 14px;
-  }
-  
-  .fallen-columns {
-    padding-top: 20px;
-    max-height: 150px;
-  }
-  
-  .fallen-item img {
-    width: 35px !important;
-  }
-  
-  .fallen-letter {
-    font-size: 14px;
-  }
-  
-  .new-bottom {
-    position: fixed;
-    bottom: 70px;
+
+  /* مربع الإدخال: أسفل الشجرة يغطي الجذر - غير شفاف - طولي */
+  .input-container {
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: auto;
-    right: auto;
+    bottom: calc(62vh * 0.12 + 72px); /* يضعه فوق الحافة ويغطي جذع الشجرة */
+    width: 86%;
+    z-index: 18;
   }
-  
-  .new-btn {
-    padding: 12px 24px;
-    border-radius: 25px;
+
+  .input-field {
+    width: 100%;
+    background: #ffffff;
+    color: #000;
+    border-radius: 12px;
+    padding: 18px 20px;
+    font-size: 22px !important;
+    letter-spacing: 3px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  }
+
+  /* زر البداية: على اليمين تحت مربع الإدخال بقليل */
+  .start-col {
+    position: absolute;
+    right: 18px;
+    bottom: calc(62vh * 0.08 + 14px);
+    z-index: 16;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .start-btn {
+    min-width: 150px;
+    min-height: 64px;
+    padding: 14px 22px;
+    font-size: 20px !important;
+  }
+
+  header .title {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    background: rgba(0,0,0,0.65);
+    padding: 10px 18px;
     font-size: 14px;
-    min-height: 45px;
   }
-  
-  /* تحسينات المودال للجوال */
-  .modal-card {
-    min-width: 280px;
-    margin: 20px;
-    padding: 15px;
+
+  header .controls {
+    position: absolute;
+    right: 12px;
+    bottom: 8px;
+    z-index: 20;
   }
-  
-  .modal-card img {
-    max-width: 250px;
+
+  .sound-toggle { width: 42px; height:42px; }
+
+  /* --- الصفحة الثانية (game) --- */
+  .game {
+    display: block;
+    height: 100%;
+    padding: 0;
+    position: relative;
   }
+
+  /* النصف العلوي: الكلمة ثم الشجرة + زر New (تشغلان النصف العلوي) */
+  .word-top-section {
+    height: 18vh; /* الكلمة تأخذ حيز كبير في الأعلى */
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 6px 12px;
+    margin-top: 6px;
+    z-index: 20;
+  }
+
+  .slots-row {
+    margin-top: 0 !important;
+    min-height: 18vh !important;
+    gap: 8px;
+    padding: 6px 12px;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+
+  /* الشجرة تحت الكلمة مباشرة، مع زر New على يمينها — معًا يأخذان النصف العلوي */
+  .left-game {
+    height: 32vh; /* جزء من النصف العلوي */
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position: relative;
+  }
+
+  .game-tree-frame {
+    width: 56% !important;
+    max-width: none !important;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .game-tree-img{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: auto !important;
+    height: 92% !important;
+    object-fit: contain !important;
+    z-index: 6;
+  }
+
+  /* زر New على يمين الشجرة في نفس النصف العلوي */
+  .new-bottom {
+    position: absolute;
+    right: 8%;
+    top: calc(18vh + 8vh); /* فوق منتصف الشجرة تقريبا */
+    z-index: 18;
+  }
+
+  .new-btn {
+    padding: 22px 16px;
+    border-radius: 36px;
+    min-height: 56px;
+    font-size: 14px;
+  }
+
+  /* النصف السفلي: مقسوم رأسيًا — اليمين: لوحة الأزرار (أكبر ممكن)، اليسار: التفاحات الساقطة */
+  .right-col {
+    position: absolute;
+    top: 50vh; /* بداية النصف السفلي */
+    left: 0;
+    width: 100%;
+    height: calc(50vh - 64px);
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding: 8px 10px;
+    z-index: 10;
+    align-items:flex-start;
+    justify-content:space-between;
+  }
+
+  /* fallen columns على اليسار من النصف السفلي */
+  .fallen-columns {
+    width: 46%;
+    padding-top: 12px;
+    max-height: calc(50vh - 90px);
+    overflow:auto;
+  }
+  .fallen-column{ width: 86px; align-items:center; }
+
+  /* لوحة الأزرار على اليمين من النصف السفلي — أكبر وأكثر وضوحًا */
+  .alphabet {
+    width: 52%;
+    padding: 12px;
+    min-height: 180px;
+    gap: 10px;
+    overflow:auto;
+    justify-content:flex-start;
+    align-content:flex-start;
+    display:flex;
+    flex-wrap:wrap;
+  }
+
+  /* تكبير أزرار الحروف لسهولة اللمس */
+  .letter-btn {
+    padding: 12px 16px !important;
+    min-width: 54px !important;
+    min-height: 48px !important;
+    font-size: 18px !important;
+    border-radius: 10px !important;
+  }
+
+  /* العنوان والزر الصوت في الأسفل */
+  header .title {
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    background: rgba(0,0,0,0.7);
+    padding: 8px 16px;
+  }
+
+  header .controls {
+    bottom: 8px;
+    right: 12px;
+    z-index: 30;
+  }
+
+  /* تأكد أن لا يخرج شيء خارج الإطار */
+  .stage, .wrap, body, html { overflow: hidden; }
+
+  /* اجعل بعض الأقسام قابلة للتمرير لو احتاجت */
+  .alphabet, .fallen-columns { -webkit-overflow-scrolling: touch; overflow:auto; }
+}
+
+/* أحجام أصغر لهواتف صغيرة جدًا */
+@media (max-width: 420px) and (orientation: portrait) {
+  .input-field { font-size:18px !important; padding:14px 12px;}
+  .start-btn { font-size:18px; padding:12px 18px;}
+  .letter-btn { min-width:48px !important; padding:10px 12px !important; font-size:16px !important; }
+  .slots-row.short-word .slot { font-size:36px !important; }
+  .slots-row.medium-word .slot { font-size:26px !important; }
+  .game-tree-frame { width: 68% !important; }
 }
 
 /* تحسينات للشاشات المتوسطة */
@@ -688,7 +723,100 @@ header .controls {
 </style>
 </head>
 <body>
-  <script src="config.js"></script>
+  <script>
+/* config.js -- Appelboom v7 Settings - الإصدار المصحح */
+const settings = {
+  
+  // ========== 🖼️ قسم الصور ==========
+  images: {
+    background: "assets/images/background.jpg",
+    tree: "assets/images/tree.png",
+    apple: "assets/images/apple.png",
+    appleTransparent: "assets/images/apple_transparent.png",
+    crowdFail: "assets/images/crowd_fail.jpg",
+    crowdWin: "assets/images/crowd_win.jpg",
+    winImage: "assets/images/win.jpg"
+  },
+
+  // ========== 🔊 قسم الأصوات ==========
+  sounds: {
+    birds: "assets/sounds/birds.mp3",
+    click: "assets/sounds/click1.mp3",
+    fallWhistle: "assets/sounds/fall_whistle.mp3",
+    impact: "assets/sounds/impact.mp3",
+    slide: "assets/sounds/slide.mp3",
+    successList: [
+      "assets/sounds/success1.mp3",
+      "assets/sounds/success2.mp3"
+    ],
+    failList: [
+      "assets/sounds/fail1.mp3",
+      "assets/sounds/fail2.mp3"
+    ],
+    successMessage: "assets/sounds/success_message.mp3",
+    failMessage: "assets/sounds/fail_message.mp3"
+  },
+
+  // ========== ⚙️ قسم الإعدادات الأساسية ==========
+  options: {
+    sound_enabled: true,
+    check_dictionary_online: false,
+    maxApplesPerColumn: 3,
+    fallDurationMs: 700,
+    bounceDurationMs: 420,
+    bounceTiltDeg: 28,
+    appleSizeBasePx: 38,
+    slotFontSizePx: 26,
+    slotUnderscoreSpacing: 10,
+    arabicWordsFile: "assets/words_ar.json",
+    
+    // 🆕 إعدادات أحجام الخطوط للكلمات - مصححة ومناسبة للالتفاف المتأخر
+    slotSizes: {
+      short: 70,           // للكلمات القصيرة (1-8 أحرف) - يتناسب مع CSS
+      medium: 35,          // للكلمات المتوسطة (9-16 حرف)
+      long: 20,            // للكلمات الطويلة (17-24 حرف)
+      veryLong: 16,        // للكلمات الطويلة جداً (25-30 حرف)
+      extremelyLong: 14    // للكلمات الاستثنائية (أكثر من 30 حرف)
+    }
+  },
+
+  // ========== 🎨 قسم الإعدادات المتقدمة ==========
+
+advanced: {
+  tree: {
+    setupPage: {
+      width: "86%",
+      maxWidth: "760px"
+    },
+    gamePage: {
+      width: "95%",  // ✅ تصغير الشجرة في الصفحة الثانية
+      maxWidth: "700px" // ✅ تصغير الحجم الأقصى
+    }
+  }, 
+    apples: {
+      heroApples: {
+        size: 38,
+        fontSize: "18px"
+      },
+      fallenSize: 44,
+      fallenLetterSize: 18
+    },
+    ui: {
+      slots: {
+        revealedColor: "#0b8a3a",
+        revealedSizeIncrease: 4  // 🆕 تقليل الزيادة لتتناسب مع التصغير التلقائي
+      }
+    }
+  },
+
+  // ========== 🔤 قسم اللغات والنصوص ==========
+  languages: {
+    nl: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","Á","À","É","È","Ë","Í","Ï","Ó","Ö","Ú","Ü"],
+    en: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
+    ar: ["ا","أ","إ","آ","ب","ت","ث","ج","ح","خ","د","ذ","ر","ز","س","ش","ص","ض","ط","ظ","ع","غ","ف","ق","ك","ل","م","ن","ه","و","ؤ","ي","ئ","ى"]
+  }
+};
+</script>
 
   <div class="wrap">
     <div class="stage" id="stage">
@@ -743,8 +871,8 @@ header .controls {
           </div>
 
           <div class="right-col">
-            <div id="alphabet" class="alphabet"></div>
             <div id="fallenColumns" class="fallen-columns"></div>
+            <div id="alphabet" class="alphabet"></div>
           </div>
 
           <div class="new-bottom">
@@ -955,6 +1083,7 @@ header .controls {
       state.lang = el.dataset.lang;
       updateInputPlaceholder();
       uiClick();
+      renderAlphabet(); // اعادة رسم الحروف لما يتغير اللغة
     })
   });
 
@@ -1020,7 +1149,7 @@ header .controls {
       const ok = await checkDictionary(word);
       if(!ok){
         modalTitle.textContent = state.lang==='ar' ? 'الكلمة غير موجودة' : 'Word not found';
-        modalDesc.textContent = state.lang==='ar' ? 'الكلمة غير موجودة في القاموس. راجع التهجئة.' : 'Word not found in dictionary. Check spelling.';
+        modalDesc.textContent = state.lang==='ار' ? 'الكلمة غير موجودة في القاموس. راجع التهجئة.' : 'Word not found in dictionary. Check spelling.';
         modalMedia.innerHTML = '';
         modal.classList.add('show');
         playAudio(settings.sounds.failList[0], 0.18);
@@ -1119,10 +1248,10 @@ header .controls {
       btn.dataset.letter = l;
       
       if (isMobile) {
-        btn.style.minWidth = '44px';
-        btn.style.minHeight = '44px';
+        btn.style.minWidth = '54px';
+        btn.style.minHeight = '48px';
         btn.style.padding = '12px';
-        btn.style.fontSize = '16px';
+        btn.style.fontSize = '18px';
       }
       
       btn.addEventListener('click', onLetterClick); 
@@ -1324,6 +1453,4 @@ header .controls {
 })();
 </script>
 </body>
-
 </html>
-
