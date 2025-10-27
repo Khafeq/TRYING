@@ -6,7 +6,7 @@
 <meta http-equiv="Expires" content="0">
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>AppelBoom v7.0 - Designed by ME</title>
+<title>AppelBoom v7.0 - Designed by MEEEEEE</title>
 <style>
 /* ---------- تصميم عام وحل مشاكل التنسيق للصور ---------- */
 :root{
@@ -997,7 +997,7 @@ const settings = {
     <div class="stage" id="stage">
         <div id="bg" class="bg"></div>
         <header>
-            <div class="title">Appelboom V7.0 - Designed by ME</div>
+            <div class="title">Appelboom V7.0 - Designed by MEEEEEE</div>
             <div class="controls">
                 <button id="soundToggle" class="sound-toggle" aria-label="تبديل الصوت"></button>
             </div>
@@ -1083,26 +1083,28 @@ const settings = {
             }
         }
         
-        // تحديث العناصر الديناميكية
-        updateDynamicElements();
+        console.log('Orientation changed to:', isPortrait ? 'portrait' : 'landscape');
     }
 
-    // دالة لتحديث العناصر الديناميكية
+    // دالة لتحديث العناصر الديناميكية - بدون إعادة بناء
     function updateDynamicElements() {
         const isPortrait = window.matchMedia("(orientation: portrait)").matches;
         
-        // إذا كنا في صفحة اللعبة، نحدث العناصر
+        // إذا كنا في صفحة اللعبة، نحدث العناصر فقط
         if (pageGame.classList.contains('active')) {
-            // إعادة ضبط أبعاد الشجرة
+            console.log('Updating dynamic elements for game page');
+            
+            // إعادة ضبط أبعاد الشجرة فقط
             adjustTreeSize();
             
-            // إعادة حساب مواقع التفاح الساقط
+            // إعادة حساب مواقع التفاح الساقط فقط
             repositionFallenApples();
             
-            // إعادة بناء لوحة الحروف إذا لزم الأمر
-            if (state.alphabetButtons.length > 0) {
-                adjustAlphabetButtons();
-            }
+            // ضبط أزرار الحروف فقط
+            adjustAlphabetButtons();
+            
+            // تحديث تخطيط العناصر فقط
+            updateLayout();
         }
     }
 
@@ -1113,11 +1115,23 @@ const settings = {
         const heroTree = document.getElementById('heroTree');
         
         if (isPortrait) {
-            if (gameTree) gameTree.style.width = "60%";
-            if (heroTree) heroTree.style.width = "95%";
+            if (gameTree) {
+                gameTree.style.width = "60%";
+                gameTree.style.maxWidth = "300px";
+            }
+            if (heroTree) {
+                heroTree.style.width = "95%";
+                heroTree.style.maxWidth = "none";
+            }
         } else {
-            if (gameTree) gameTree.style.width = "90%";
-            if (heroTree) heroTree.style.width = "85%";
+            if (gameTree) {
+                gameTree.style.width = "90%";
+                gameTree.style.maxWidth = "500px";
+            }
+            if (heroTree) {
+                heroTree.style.width = "85%";
+                heroTree.style.maxWidth = "600px";
+            }
         }
     }
 
@@ -1141,19 +1155,59 @@ const settings = {
     function adjustAlphabetButtons() {
         const isPortrait = window.matchMedia("(orientation: portrait)").matches;
         
-        state.alphabetButtons.forEach(btn => {
+        if (state.alphabetButtons && state.alphabetButtons.length > 0) {
+            state.alphabetButtons.forEach(btn => {
+                if (isPortrait) {
+                    btn.style.minWidth = "32px";
+                    btn.style.minHeight = "32px";
+                    btn.style.padding = "8px 10px";
+                    btn.style.fontSize = "12px";
+                } else {
+                    btn.style.minWidth = "38px";
+                    btn.style.minHeight = "38px";
+                    btn.style.padding = "10px 12px";
+                    btn.style.fontSize = "14px";
+                }
+            });
+        }
+    }
+
+    // تحديث التخطيط العام
+    function updateLayout() {
+        const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+        
+        // تحديث تخطيط الصفحة الثانية فقط
+        if (pageGame.classList.contains('active')) {
+            const rightCol = document.querySelector('.right-col');
+            const fallenColumns = document.getElementById('fallenColumns');
+            const alphabet = document.getElementById('alphabet');
+            
             if (isPortrait) {
-                btn.style.minWidth = "32px";
-                btn.style.minHeight = "32px";
-                btn.style.padding = "8px 10px";
-                btn.style.fontSize = "12px";
+                // تخطيط عمودي
+                if (rightCol) {
+                    rightCol.style.flexDirection = "row";
+                    rightCol.style.height = "50vh";
+                }
+                if (fallenColumns) {
+                    fallenColumns.style.maxHeight = "100%";
+                }
+                if (alphabet) {
+                    alphabet.style.maxHeight = "100%";
+                }
             } else {
-                btn.style.minWidth = "38px";
-                btn.style.minHeight = "38px";
-                btn.style.padding = "10px 12px";
-                btn.style.fontSize = "14px";
+                // تخطيط أفقي
+                if (rightCol) {
+                    rightCol.style.flexDirection = "column";
+                    rightCol.style.height = "65vh";
+                }
+                if (fallenColumns) {
+                    fallenColumns.style.maxHeight = "200px";
+                }
+                if (alphabet) {
+                    alphabet.style.maxHeight = "none";
+                }
             }
-        });
+        }
     }
 
     // عناصر DOM
@@ -1762,6 +1816,7 @@ const settings = {
     window.addEventListener('orientationchange', function() {
         setTimeout(() => {
             updateOrientationClasses();
+            updateDynamicElements(); // تحديث العناصر فقط بدون إعادة بناء
         }, 100);
     });
     
@@ -1769,13 +1824,15 @@ const settings = {
     window.addEventListener('resize', function() {
         setTimeout(() => {
             updateOrientationClasses();
+            updateDynamicElements(); // تحديث العناصر فقط بدون إعادة بناء
         }, 150);
     });
 
     window.Appelboom = {
         settings,
         state,
-        updateOrientationClasses // جعل الدالة متاحة globally للاختبار
+        updateOrientationClasses,
+        updateDynamicElements // جعل الدالة متاحة globally للاختبار
     };
 })();
 </script>
