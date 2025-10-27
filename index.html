@@ -390,23 +390,18 @@ header .controls {
         height: 100%;
     }
     .lang-col {
-        position: absolute !important;
-        left: 20px !important;
-        top: 100px !important;
-        margin-top: 0 !important; /* إزالة margin السابق */
         flex-direction: column;
+        justify-content: center;
+        margin-top: 180px !important;
         gap: 8px;
-        z-index: 1000; /* تأكد من ظهورها فوق العناصر */
-        pointer-events: auto; /* تفعيل النقر */
+             z-index: 1000;
+             pointer-events: auto;
     }
-    
     .lang-btn {
         width: 60px;
         height: 35px;
         font-size: 12px;
-        background: rgba(255,255,255,0.95) !important;
-        border: 2px solid #0b5138;
-        pointer-events: auto !important;
+             pointer-events: auto !important;
     }
     .tree-wrap {
         height: 85vh;
@@ -772,7 +767,7 @@ header .controls {
     .new-bottom {
         position: absolute !important;
         order: 3;
-        bottom: 55px !important;
+        top: 85px !important;
         right: 5%;
         top: auto !important;
         transform: none;
